@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "futbal game manager",
-    "slug": "futbal.mng.mobile-app",
+    "slug": "futbal-mng-mobile-app",
     "privacy": "public",
     "sdkVersion": "33.0.0",
     "platforms": [

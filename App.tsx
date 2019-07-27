@@ -1,13 +1,16 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import {createStackNavigator, createAppContainer} from 'react-navigation';
+import Games from './Games';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-    </View>
-  );
-}
+const MainNavigator = createStackNavigator({
+  Home: {screen: Games},
+  //Profile: {screen: ProfileScreen},
+});
+
+const App = createAppContainer(MainNavigator);
+
+export default App;
 
 const styles = StyleSheet.create({
   container: {
