@@ -2,10 +2,15 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import {createStackNavigator, createAppContainer} from 'react-navigation';
 import Games from './Games';
+import GameDetails from './GameDetails';
+import { PlaceForm } from './PlaceForm';
+import { NewGameForm } from './NewGameForm';
 
 const MainNavigator = createStackNavigator({
   Home: {screen: Games},
-  //Profile: {screen: ProfileScreen},
+  GameDetails: {screen: GameDetails},
+  AddGame: {screen: NewGameForm},
+  UpdatePlace: {screen: PlaceForm}
 });
 
 const App = createAppContainer(MainNavigator);
