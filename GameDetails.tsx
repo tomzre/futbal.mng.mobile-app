@@ -9,7 +9,9 @@ import { ApiConst } from './GameService/ApiConst';
 
 export default class GameDetails extends React.Component {
     static navigationOptions = {
-        title: `game:`
+      headerStyle: {
+        backgroundColor: '#3c6382',
+      }
       };
 
   constructor(props){

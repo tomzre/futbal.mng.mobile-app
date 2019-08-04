@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, FlatList, TouchableOpacity, Text } from "react-native";
+import { View, FlatList, TouchableOpacity, Text, StyleSheet } from "react-native";
 import AvailabilityBox from "./AvailabilityBox";
 
 export class AttendeesList extends Component
@@ -37,3 +37,10 @@ export class AttendeesList extends Component
         )
     }
 }
+
+
+const styles = StyleSheet.create({
+    checkbox: {
+      color: 'orange'
+    }
+  });

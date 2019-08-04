@@ -6,9 +6,17 @@ import DateTimePicker from "react-native-modal-datetime-picker";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCalendar } from "@fortawesome/free-solid-svg-icons";
 import moment from 'moment';
+import { ApiConst } from "./GameService/ApiConst";
 
 export class NewGameForm extends Component
 {
+    static navigationOptions = {
+        title: `Create a new game`,
+        headerStyle: {
+            backgroundColor: '#3c6382',
+          },
+      };
+
     constructor(props) {
         super(props); 
         this.state = {
@@ -25,13 +33,23 @@ export class NewGameForm extends Component
         let payload = {
             name: this.state.name,
             gameDate: this.state.gameDate,
+            ownerId: '5ebbf591-f261-4a7c-ab76-82e4d5cfebe0',
             address: {
-                street: this.state.street,
-                number: this.state.number
+                street: this.state.streetName,
+                number: this.state.streetNumber == '' ? 0 : this.state.streetNumber
             }
         }
         console.log(JSON.stringify(payload));
 
+        fetch(`${ApiConst.apiUrl}api/games`, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload)
+        });
+        this.props.navigation.goBack();
     }
     showDateTimePicker = () => {
         console.log("pressed");
@@ -51,27 +69,25 @@ export class NewGameForm extends Component
         const {gameName, gameDate, streetName, streetNumber} = this.state
         const initDate = new Date();
         const intiTime = new Date(initDate.setHours(initDate.getHours()));
+        const valueGameDate = gameDate === '' ? '' : moment(gameDate).format('lll');
         return(
-            <View>
+        <View style={{flex: 1, flexDirection: 'column', marginLeft: 10, marginRight: 10}}>
                 <TextInput
-
           style={styles.container}
           placeholder="Name"
           onChangeText={(name) => this.setState({name})}
           value={gameName}
         />
-        <View style={{flex: 1, flexDirection: 'row', paddingBottom: 20}}>
+        <View style={{ flexDirection: 'row'}}>
         <TextInput 
             style={styles.dateContainer}
             placeholder="MM/DD/YYYY"
             onChangeText={(gameDate) => this.setState({gameDate})}
-            value = {moment(gameDate).format("YYYY-MM-DD HH:mm")}
+            value = {valueGameDate}
         />
-        <TouchableOpacity
+        <FontAwesomeIcon
             onPress={this.showDateTimePicker}
-        >
-            <FontAwesomeIcon style={styles.dateIcon} icon={faCalendar} size={24}/>
-        </TouchableOpacity>
+            style={styles.dateIcon} icon={faCalendar} size={30}/>
         </View>
         <DateTimePicker
           mode='datetime'
@@ -81,6 +97,7 @@ export class NewGameForm extends Component
           onConfirm={this.handleDatePicked}
           onCancel={this.hideDateTimePicker}
         />
+        <View>
         <Text style={styles.container}>Address</Text>
         <TextInput style={styles.container}
             onChangeText={(streetName) => this.setState({streetName})}
@@ -90,6 +107,7 @@ export class NewGameForm extends Component
         <TextInput
             onChangeText={(streetNumber) => this.setState({streetNumber})}
             style={styles.container}
+            keyboardType='numeric'
             placeholder="Street Number"
             value={streetNumber}
         />
@@ -100,24 +118,31 @@ export class NewGameForm extends Component
             accessibilityLabel="Create New Game"
             />
             </View>
+        </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-      padding: 20
+      padding: 20,
+      borderBottomColor: '#60a3bc',
+      borderBottomWidth: 1
     },
     dateContainer : {
-        padding: 10
+        width: 340,
+        height: 50,
+        borderBottomColor: '#60a3bc',
+      borderBottomWidth: 1
     },
     dateIcon: {
-        alignContent: 'flex-end'
+        padding: 10,
+        color: '#3c6382'
     },
     button: {
+        paddingBottom: 5,
         marginBottom: 30,
-        width: 260,
         alignItems: 'center',
-        backgroundColor: '#2196F3'
+        backgroundColor: '#0c2461'
       },
   });

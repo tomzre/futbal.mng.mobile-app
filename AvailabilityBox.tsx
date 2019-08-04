@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, SafeAreaView, Switch } from "react-native"
+import { Text, SafeAreaView, Switch, StyleSheet } from "react-native"
 import { CheckBox } from 'react-native-elements'
 import { ApiConst } from "./GameService/ApiConst";
 
@@ -40,14 +40,20 @@ export default class AvailabilityBox extends React.Component {
         
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-                {/* <CheckBox 
-          title='Click Here'
-          checked={this.props.checked}/> */}
                 <Switch
+                    trackColor={ {false:'#dfe6e9', true: '#60a3bc'}}
+                    thumbColor={'#3c6382'}
                     value={check}
                     onValueChange={(avail) => this.onChangeAvailability(avail, this.props.payload)}
-                ></Switch>
+                />
             </SafeAreaView>
         );
     }
 }
+
+
+const styles = StyleSheet.create({
+    checkbox: {
+      color: 'orange'
+    }
+  });
