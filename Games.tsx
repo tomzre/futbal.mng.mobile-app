@@ -1,10 +1,11 @@
-import React from 'react';
-import { FlatList, ActivityIndicator, Text, View, TouchableOpacity, SafeAreaView, RefreshControl} from 'react-native';
+import React, { Component } from 'react';
+import { FlatList, ActivityIndicator, Text, View, TouchableOpacity, SafeAreaView, RefreshControl } from 'react-native';
 import { faFutbol } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { ApiConst } from './GameService/ApiConst';
+import { connect } from 'react-redux';
+import { listGames } from './redux/mygames/reducer';
 
-export default class Games extends React.Component {
+class Games extends Component {
   static navigationOptions = {
     title: 'My Games',
     headerStyle: {
@@ -19,22 +20,13 @@ export default class Games extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { gamesList: {}, isLoading: true, refreshing: false}
+    this.state = { refreshing: false }
     this.renderItem = this.renderItem.bind(this);
   }
 
-  async componentDidMount() {
-    await this.apiCalls();
-  }
-
-  async apiCalls() {
-    try {
-      const gamesCallApi = await fetch(`${ApiConst.apiUrl}api/users/5ebbf591-f261-4a7c-ab76-82e4d5cfebe0/mygames`);
-      const games = await gamesCallApi.json();
-      this.setState({ gamesList: games, isLoading: false });
-    } catch (err) {
-      console.error("Error fetching games.", err);
-    }
+  componentDidMount() {
+    this.props.listGames('5ebbf591-f261-4a7c-ab76-82e4d5cfebe0');
+    //await this.apiCalls();
   }
 
   gameDetails(id) {
@@ -54,20 +46,20 @@ export default class Games extends React.Component {
   }
 
   addGame() {
-    console.log('pressed');
     this.props.navigation.navigate('AddGame');
   }
 
-  _onRefresh = async () => {
+  _onRefresh = () => {
     console.log('refreshing');
-    this.setState({refreshing: true});
-    await this.apiCalls();
-    this.setState({refreshing: false}); 
+    this.setState({ refreshing: true });
+    this.props.listGames('5ebbf591-f261-4a7c-ab76-82e4d5cfebe0')
+      .then(this.setState({ refreshing: false }));
   }
 
   render() {
-    const { gamesList, isLoading } = this.state;
-    if (isLoading) {
+
+    const { games, loading } = this.props;
+    if (loading) {
       return (
         <View style={{ flex: 1, padding: 20 }}>
           <ActivityIndicator />
@@ -81,12 +73,12 @@ export default class Games extends React.Component {
           <FlatList
             refreshControl={
               <RefreshControl
-        colors={["#9Bd35A", "#689F38"]}
-        refreshing={this.state.refreshing}
-        onRefresh={this._onRefresh}
-    />
+                colors={["#9Bd35A", "#689F38"]}
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh}
+              />
             }
-            data={gamesList}
+            data={games}
             renderItem={this.renderItem}
             keyExtractor={({ id }, index) => id}
           />
@@ -99,3 +91,18 @@ export default class Games extends React.Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  let storedGames = state.games.map(game => ({ key: game.id, ...game }));
+  const loading = state.loading;
+  return {
+    games: storedGames,
+    loading
+  };
+};
+
+const mapDispatchToProps = {
+  listGames
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Games);

@@ -1,41 +1,27 @@
 import React from 'react';
-import { FlatList, ActivityIndicator, Text, View, TouchableOpacity, SafeAreaView  } from 'react-native';
-import AvailabilityBox from './AvailabilityBox';
+import { ActivityIndicator, Text, View, SafeAreaView  } from 'react-native';
 import { AttendeesList } from './AttendeesList';
-import { PlaceForm } from './PlaceForm';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCoffee, faLocationArrow, faGlobe, faGlobeAfrica, faGlobeEurope, faGlobeAmericas, faMapMarkedAlt } from '@fortawesome/free-solid-svg-icons'
-import { ApiConst } from './GameService/ApiConst';
+import { faMapMarkedAlt } from '@fortawesome/free-solid-svg-icons'
+import { connect } from 'react-redux';
 
-export default class GameDetails extends React.Component {
+import { receiveGame } from './redux/mygames/reducer'
+
+class GameDetails extends React.Component {
     static navigationOptions = {
       headerStyle: {
         backgroundColor: '#3c6382',
       }
       };
 
-  constructor(props){
-    super(props);
-    this.state = {game: {}, isLoading: false}
-}
-
-async componentDidMount(){
-    this.setState({...this.state, game: {}, isLoading: true});
-    const gameId = this.props.navigation.getParam('id', 'no-id');
-
-    if(gameId === 'no-id'|| gameId == null)
-    {
-        throw new console.error("Game Id is null", gameId);
+      constructor(props){
+        super(props);
     }
 
-    try{
-        const gameApiCall = await fetch(`${ApiConst.apiUrl}api/games/${gameId}`);
-        const game = await gameApiCall.json();
-        this.setState({game: game, isLoading: false});
-    } catch (err)
-    {
-        console.error("Error fetching games.", err);
-    }
+ componentDidMount(){
+  const { id } = this.props.navigation.state.params;
+
+  this.props.receiveGame(id);
 }
 
 goToPlaceForm(gameId: string, address){
@@ -48,22 +34,29 @@ goToPlaceForm(gameId: string, address){
 
 render(){
     
-    const { game, isLoading} = this.state;
+    const { game, loading} = this.props;
 
-    var street = game.address != null ? game.address.street : '';
-    var number = game.address != null ? game.address.number : '';
     
-    if(isLoading){
-        return(
-          <View style={{flex: 1, padding: 20}}>
+    if(loading){
+      return(
+        <View style={{flex: 1, padding: 20}}>
             <ActivityIndicator/>
           </View>
         )
       }
-
+      
+      var street = game.address != null || undefined ? game.address.street : '';
+      var number = game.address != null || undefined ? game.address.number : '';
     return(
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}} >
-      <Text style={{color: 'steelblue', fontWeight: 'bold', fontSize: 36, textAlign: 'center'}} >{game.name}</Text>
+      <Text style={ { 
+            color: 'steelblue', 
+            fontWeight: 'bold', 
+            fontSize: 36, 
+            textAlign: 'center'}} 
+      >
+        {game.name}
+      </Text>
       
       <Text>Place: {street} - {number}</Text>
       <FontAwesomeIcon 
@@ -75,3 +68,18 @@ render(){
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  const game = state.game;
+  const loading = state.loading;
+  return {
+    game,
+    loading
+  };
+}
+
+const mapDispatchToProps = {
+  receiveGame
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(GameDetails);

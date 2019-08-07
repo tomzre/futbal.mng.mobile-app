@@ -1,27 +1,42 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import {createStackNavigator, createAppContainer} from 'react-navigation';
+import {createStackNavigator, createAppContainer, NavigationContainer} from 'react-navigation';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider, connect } from 'react-redux';
+import axios from 'axios';
+import axiosMiddleware from 'redux-axios-middleware';
+
+import reducer  from './redux/mygames/reducer';
 import Games from './Games';
 import GameDetails from './GameDetails';
 import { PlaceForm } from './PlaceForm';
 import { NewGameForm } from './NewGameForm';
 
-const MainNavigator = createStackNavigator({
+const client = axios.create({
+  baseURL: 'https://c86b6b22.ngrok.io',
+  responseType: 'json'
+});
+
+const store = createStore(reducer, applyMiddleware(axiosMiddleware(client)));
+
+const MainNavigator: NavigationContainer = createStackNavigator({
   Home: {screen: Games},
   GameDetails: {screen: GameDetails},
   AddGame: {screen: NewGameForm},
   UpdatePlace: {screen: PlaceForm}
+},
+{
+  initialRouteName: "Home"
 });
 
-const App = createAppContainer(MainNavigator);
+const AppContainer = createAppContainer(MainNavigator);
 
-export default App;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#aaa69d',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default class App extends Component {
+  render() {
+    return (
+      <Provider store={store}>
+          <AppContainer />
+      </Provider>
+    )
+  }
+}

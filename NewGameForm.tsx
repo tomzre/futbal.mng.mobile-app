@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { StyleSheet, View, TouchableOpacity, Text, Button } from "react-native";
+import { StyleSheet, View, Text, Button } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
-import { PlaceForm } from "./PlaceForm";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCalendar } from "@fortawesome/free-solid-svg-icons";
