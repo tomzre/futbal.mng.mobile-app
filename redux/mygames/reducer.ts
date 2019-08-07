@@ -15,9 +15,18 @@ export const SET_AVAILABILITY: string = 'futbal-mng/games/AVAILABILITY';
 export const SET_AVAILABILITY_SUCCESS: string = 'futbal-mng/games/AVAILABILITY_SUCCESS';
 export const SET_AVAILABILITY_FAIL: string = 'futbal-mng/games/AVAILABILITY_FAIL';
 
-const initialState = { games: [], game: {} }
+const initialState = {
+    games: [],
+    game: {},
+    setAvailability: {
+        availability: null,
+        error: null,
+        loading: false
+    }
+}
 
 export default function reducer(state = initialState, action) {
+    let error;
     switch (action.type) {
         case GET_MYGAMES:
             return { ...state, loading: true };
@@ -48,22 +57,30 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 loading: false,
-                error: `Error while fetching game. ${JSON.stringify(state)}`
+                error: `Error while fetching game.`
             };
         case SET_AVAILABILITY:
             return {
                 ...state,
-                loading: true
+                setAvailability: {
+                    ...state.setAvailability,
+                    loading: true
+                }
             };
         case SET_AVAILABILITY_SUCCESS:
             return {
                 ...state,
-                loading: true
+                setAvailability: {
+                    post: action.payload,
+                    error: null,
+                    loading: false
+                }
             };
-        case SET_AVAILABILITY:
+        case SET_AVAILABILITY_FAIL:
+            error = action.payload || { message: action.payload.message };
             return {
                 ...state,
-                loading: true
+                setAvailability: { availability: null, error: error, loading: false }
             };
         default:
             return state;
@@ -95,6 +112,24 @@ export function receiveGame(gameId: string) {
         payload: {
             request: {
                 url: `api/games/${gameId}`
+            }
+        }
+    };
+}
+
+export function setAvailability(props, gameId, attendeeId) {
+    console.log(props);
+    return {
+        type: SET_AVAILABILITY,
+        payload: {
+            request: {
+                method: 'put',
+                data: props,
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url: `api/games/${gameId}/attendees/${attendeeId}/available`
             }
         }
     };

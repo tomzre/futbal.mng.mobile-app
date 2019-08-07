@@ -1,9 +1,10 @@
 import React from "react";
-import { Text, SafeAreaView, Switch, StyleSheet } from "react-native"
-import { CheckBox } from 'react-native-elements'
+import { SafeAreaView, Switch } from "react-native"
 import { ApiConst } from "./GameService/ApiConst";
+import { setAvailability } from "./redux/mygames/reducer";
+import { connect } from 'react-redux';
 
-export default class AvailabilityBox extends React.Component {
+class AvailabilityBox extends React.Component {
 
     constructor(props) {
         super(props);
@@ -19,20 +20,13 @@ export default class AvailabilityBox extends React.Component {
         this.setState(prevState => ({
             check: !prevState.check
           }));
-        
-        fetch(`${ApiConst.apiUrl}api/games/${gameId}/attendees/${attendeeId}/available`, {
-            method: 'PUT',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                userId: attendeeId,
-                isAvailable: avail
-            }),
+        let body = JSON.stringify({
+            userId: attendeeId,
+            isAvailable: avail
         });
+        
+        this.props.setAvailability(body, gameId, attendeeId);
     }
-
 
     render() {
         
@@ -52,8 +46,16 @@ export default class AvailabilityBox extends React.Component {
 }
 
 
-const styles = StyleSheet.create({
-    checkbox: {
-      color: 'orange'
-    }
-  });
+
+const mapStateToProps = (state) => {
+    
+    return {
+    
+    };
+  }
+  
+  const mapDispatchToProps = {
+    setAvailability
+  };
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(AvailabilityBox);
