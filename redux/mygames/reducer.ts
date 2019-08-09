@@ -15,6 +15,9 @@ export const SET_AVAILABILITY: string = 'futbal-mng/games/AVAILABILITY';
 export const SET_AVAILABILITY_SUCCESS: string = 'futbal-mng/games/AVAILABILITY_SUCCESS';
 export const SET_AVAILABILITY_FAIL: string = 'futbal-mng/games/AVAILABILITY_FAIL';
 
+export const UPDATE_PLACE: string = 'futbal-mng/games/UPDATE_PLACE';
+export const UPDATE_PLACE_SUCCESS: string = 'futbal-mng/games/UPDATE_PLACE_SUCCESS';
+export const UPDATE_PLACE_FAIL: string = 'futbal-mng/games/UPDATE_PLACE_FAIL';
 const initialState = {
     games: [],
     game: {},
@@ -22,7 +25,8 @@ const initialState = {
         availability: null,
         error: null,
         loading: false
-    }
+    },
+    place: {}
 }
 
 export default function reducer(state = initialState, action) {
@@ -71,7 +75,7 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 setAvailability: {
-                    post: action.payload,
+                    availability: action.payload,
                     error: null,
                     loading: false
                 }
@@ -81,6 +85,33 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 setAvailability: { availability: null, error: error, loading: false }
+            };
+        case UPDATE_PLACE:
+            return {
+                ...state,
+                newPlace: {
+                    ...state.place,
+                    loading: true
+                }
+            };
+        case UPDATE_PLACE_SUCCESS:
+            return {
+                ...state,
+                newPlace: {
+                    place: action.payload,
+                    error: null,
+                    loading: false
+                }
+            };
+        case UPDATE_PLACE_FAIL:
+         error = action.payload || { message: action.payload.message };
+            return {
+                ...state,
+                newPlace: {
+                    place: null,
+                    error: error,
+                    loading: false
+                }
             };
         default:
             return state;
@@ -117,8 +148,8 @@ export function receiveGame(gameId: string) {
     };
 }
 
+//token can be passed as param
 export function setAvailability(props, gameId, attendeeId) {
-    console.log(props);
     return {
         type: SET_AVAILABILITY,
         payload: {
@@ -133,4 +164,21 @@ export function setAvailability(props, gameId, attendeeId) {
             }
         }
     };
+}
+
+export function updatePlace(newPlace, gameId) {
+    return {
+        type: UPDATE_PLACE,
+        payload: {
+            request: {
+                method: 'put',
+                data: newPlace,
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url: `api/games/${gameId}/places`
+            }
+        }
+    }
 }

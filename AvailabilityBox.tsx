@@ -45,8 +45,6 @@ class AvailabilityBox extends React.Component {
     }
 }
 
-
-
 const mapStateToProps = (state) => {
     
     return {

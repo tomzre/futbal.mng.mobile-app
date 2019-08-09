@@ -1,14 +1,17 @@
 import React, { Component } from "react";
 import { View, TextInput, Button } from "react-native";
 import { ApiConst } from "./GameService/ApiConst";
+import { connect } from 'react-redux';
 
-export class PlaceForm extends Component {
+import { updatePlace } from "./redux/mygames/reducer";
+
+class PlaceForm extends Component {
     static navigationOptions = {
         title: 'Set new place for your game',
     };
     constructor(props) {
         super(props);
-        this.state = { gameId: '', street: this.props.street, number: this.props.number }
+        this.state = { gameId: ''}
     }
 
     componentDidMount() {
@@ -21,26 +24,21 @@ export class PlaceForm extends Component {
         }
     }
 
-    async updatePlace() {
+    setPlace(streetName: string, streetNumber: number) {
 
-        await fetch(`${ApiConst.apiUrl}api/games/${this.state.gameId}/places`, {
-            method: 'PUT',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                street: this.state.street,
-                number: this.state.number
-            }),
-        })
-        console.log(this.state.street);
-        console.log(this.state.number);
+        const newPlace = JSON.stringify({
+            street: streetName,
+            number: streetNumber
+        });
+
+        this.props.updatePlace(newPlace, this.state.gameId);
+
         this.props.navigation.goBack()
     }
 
     render() {
         const { street, number } = this.state;
+
         return (
             <View style={{ padding: 10 }}>
                 <TextInput
@@ -57,7 +55,7 @@ export class PlaceForm extends Component {
                     value={number}
                 />
                 <Button
-                    onPress={() => this.updatePlace()}
+                    onPress={() => this.setPlace(street, number)}
                     title="Save"
                     color="#841584"
                     accessibilityLabel="Save"
@@ -66,3 +64,15 @@ export class PlaceForm extends Component {
         );
     }
 }
+
+const mapStateToProps = (state) => {
+    
+    return {
+    };
+  }
+  
+  const mapDispatchToProps = {
+    updatePlace
+  };
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(PlaceForm);
