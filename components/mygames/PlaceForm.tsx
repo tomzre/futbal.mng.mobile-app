@@ -3,7 +3,7 @@ import { View, TextInput, Button } from "react-native";
 import { ApiConst } from "./GameService/ApiConst";
 import { connect } from 'react-redux';
 
-import { updatePlace } from "./redux/mygames/reducer";
+import { updatePlace } from "../../redux/mygames/reducer";
 
 class PlaceForm extends Component {
     static navigationOptions = {

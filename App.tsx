@@ -7,13 +7,13 @@ import axios from 'axios';
 import axiosMiddleware from 'redux-axios-middleware';
 
 import reducer  from './redux/mygames/reducer';
-import Games from './Games';
-import GameDetails from './GameDetails';
-import PlaceForm from './PlaceForm';
-import { NewGameForm } from './NewGameForm';
+import Games from './components/mygames/Games';
+import GameDetails from './components/mygames/GameDetails';
+import PlaceForm from './components/mygames/PlaceForm';
+import NewGameForm from './components/mygames/NewGameForm';
 
 const client = axios.create({
-  baseURL: 'https://c86b6b22.ngrok.io',
+  baseURL: 'https://975c0c59.ngrok.io',
   responseType: 'json'
 });
 
@@ -22,7 +22,7 @@ const store = createStore(reducer, applyMiddleware(axiosMiddleware(client)));
 const MainNavigator: NavigationContainer = createStackNavigator({
   Home: {screen: Games},
   GameDetails: {screen: GameDetails},
-  AddGame: {screen: NewGameForm},
+  AddGame: {screen: NewGameForm}, 
   UpdatePlace: {screen: PlaceForm}
 },
 {

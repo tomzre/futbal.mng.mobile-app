@@ -1,7 +1,7 @@
 import React from "react";
 import { SafeAreaView, Switch } from "react-native"
 import { ApiConst } from "./GameService/ApiConst";
-import { setAvailability } from "./redux/mygames/reducer";
+import { setAvailability } from "../../redux/mygames/reducer";
 import { connect } from 'react-redux';
 
 class AvailabilityBox extends React.Component {

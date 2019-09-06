@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faMapMarkedAlt } from '@fortawesome/free-solid-svg-icons'
 import { connect } from 'react-redux';
 
-import { receiveGame } from './redux/mygames/reducer'
+import { receiveGame } from '../../redux/mygames/reducer'
 
 class GameDetails extends React.Component {
     static navigationOptions = {

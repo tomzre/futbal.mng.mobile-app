@@ -2,12 +2,13 @@ import React, { Component } from "react";
 import { StyleSheet, View, Text, Button } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import DateTimePicker from "react-native-modal-datetime-picker";
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
 import { faCalendar } from "@fortawesome/free-solid-svg-icons";
-import moment from 'moment';
-import { ApiConst } from "./GameService/ApiConst";
+import moment from "moment";
+import { connect } from "react-redux";
+import { createGame } from "../../redux/mygames/reducer"
 
-export class NewGameForm extends Component
+class NewGameForm extends Component
 {
     static navigationOptions = {
         title: `Create a new game`,
@@ -27,8 +28,6 @@ export class NewGameForm extends Component
         }   
     }
     createGame() {
-        let testDate = moment(this.state.gameDate).format("lll");
-        console.log(testDate);
         let payload = {
             name: this.state.name,
             gameDate: this.state.gameDate,
@@ -38,16 +37,9 @@ export class NewGameForm extends Component
                 number: this.state.streetNumber == '' ? 0 : this.state.streetNumber
             }
         }
-        console.log(JSON.stringify(payload));
+        
+        this.props.createGame(JSON.stringify(payload));
 
-        fetch(`${ApiConst.apiUrl}api/games`, {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-        });
         this.props.navigation.goBack();
     }
     showDateTimePicker = () => {
@@ -145,3 +137,17 @@ const styles = StyleSheet.create({
         backgroundColor: '#0c2461'
       },
   });
+
+
+const mapStateToProps = (state) => {
+    
+    return {
+    
+    };
+  };
+  
+  const mapDispatchToProps = {
+    createGame
+  };
+
+  export default connect(mapStateToProps, mapDispatchToProps)(NewGameForm);

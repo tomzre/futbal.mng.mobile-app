@@ -18,6 +18,11 @@ export const SET_AVAILABILITY_FAIL: string = 'futbal-mng/games/AVAILABILITY_FAIL
 export const UPDATE_PLACE: string = 'futbal-mng/games/UPDATE_PLACE';
 export const UPDATE_PLACE_SUCCESS: string = 'futbal-mng/games/UPDATE_PLACE_SUCCESS';
 export const UPDATE_PLACE_FAIL: string = 'futbal-mng/games/UPDATE_PLACE_FAIL';
+
+export const CREATE_GAME: string = 'futbal-mng/games/CREATE_GAME';
+export const CREATE_GAME_SUCCESS: string = 'futbal-mng/games/CREATE_GAME_SUCCESS';
+export const CREATE_GAME_FAIL: string = 'futbal-mng/games/CREATE_GAME_FAIL';
+
 const initialState = {
     games: [],
     game: {},
@@ -113,6 +118,33 @@ export default function reducer(state = initialState, action) {
                     loading: false
                 }
             };
+        case CREATE_GAME:
+            return {
+                ...state,
+                newGame: {
+                    ...state.game,
+                    loading: true
+                }
+            };
+        case CREATE_GAME_SUCCESS:
+            return {
+                ...state,
+                newGame: {
+                    game: action.payload,
+                    error: null,
+                    loading: false
+                }
+            };
+        case CREATE_GAME_FAIL:
+         error = action.payload || { message: action.payload.message };
+            return {
+                ...state,
+                newGame: {
+                    game: null,
+                    error: error,
+                    loading: false
+                }
+            };
         default:
             return state;
     }
@@ -180,5 +212,22 @@ export function updatePlace(newPlace, gameId) {
                 url: `api/games/${gameId}/places`
             }
         }
-    }
+    };
+}
+
+export function createGame(newGame) {
+    return {
+        type: CREATE_GAME,
+        payload: {
+            request: {
+                method: 'post',
+                data: newGame,
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url: `api/games`
+            }
+        }
+    };
 }

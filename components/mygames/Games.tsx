@@ -3,7 +3,7 @@ import { FlatList, ActivityIndicator, Text, View, TouchableOpacity, SafeAreaView
 import { faFutbol } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { connect } from 'react-redux';
-import { listGames } from './redux/mygames/reducer';
+import { listGames } from '../../redux/mygames/reducer';
 
 class Games extends Component {
   static navigationOptions = {
