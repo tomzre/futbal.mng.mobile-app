@@ -15,11 +15,30 @@ export const SET_AVAILABILITY: string = 'futbal-mng/games/AVAILABILITY';
 export const SET_AVAILABILITY_SUCCESS: string = 'futbal-mng/games/AVAILABILITY_SUCCESS';
 export const SET_AVAILABILITY_FAIL: string = 'futbal-mng/games/AVAILABILITY_FAIL';
 
+export const CREATE_NEWGAME: string = 'futbal-mng/games/CREATE';
+export const CREATE_NEWGAME_SUCCESS: string = 'futbal-mng/games/CREATE_SUCCESS';
+export const CREATE_NEWGAME_FAIL: string = 'futbal-mng/games/CREATE_FAIL';
+
+export const CHANGE_GAMEPLACE: string = 'futbal-mng/games/PLACE';
+export const CHANGE_GAMEPLACE_SUCCESS: string = 'futbal-mng/games/PLACE_SUCCESS';
+export const CHANGE_GAMEPLACE_FAIL: string = 'futbal-mng/games/PLACE_FAIL';
+
+
 const initialState = {
     games: [],
     game: {},
     setAvailability: {
         availability: null,
+        error: null,
+        loading: false
+    },
+    createNewGame: {
+        game: null,
+        error: null,
+        loading: false
+    },
+    changePlace: {
+        place: null,
         error: null,
         loading: false
     }
@@ -82,6 +101,52 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 setAvailability: { availability: null, error: error, loading: false }
             };
+        case CREATE_NEWGAME:
+            return {
+                ...state,
+                createNewGame: {
+                    ...state.createNewGame,
+                    loading: true
+                }
+            };
+        case CREATE_NEWGAME_SUCCESS:
+            return {
+                ...state,
+                createNewGame: {
+                    post: action.payload,
+                    error: null,
+                    loading: false
+                }
+            };
+        case CREATE_NEWGAME_FAIL:
+            return {
+                ...state,
+                createNewGame: { game: null, error: error, loading: false }
+            };
+        case CHANGE_GAMEPLACE:
+            return {
+                ...state,
+                changePlace: {
+                    ...state.changePlace,
+                    loading: true
+                }
+            };
+        case CHANGE_GAMEPLACE_SUCCESS:
+            return {
+                ...state,
+                changePlace: {
+                    post: action.payload,
+                    error: null,
+                }
+            };
+        case CHANGE_GAMEPLACE_FAIL:
+            return {
+                ...state,
+                changePlace: {
+                    put: action.payload,
+                    error: null,
+                }
+            }
         default:
             return state;
     }
@@ -93,7 +158,7 @@ export function listGames(user) {
         type: GET_MYGAMES,
         payload: {
             request: {
-                url: `api/users/${user}/mygames`
+                url: `api/users/${user}/games`
             }
         }
     };
@@ -117,8 +182,7 @@ export function receiveGame(gameId: string) {
     };
 }
 
-export function setAvailability(props, gameId, attendeeId) {
-    console.log(props);
+export function setAvailability(props, gameId) {
     return {
         type: SET_AVAILABILITY,
         payload: {
@@ -129,8 +193,43 @@ export function setAvailability(props, gameId, attendeeId) {
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
                 },
-                url: `api/games/${gameId}/attendees/${attendeeId}/available`
+                url: `api/games/${gameId}/attendees/available`
             }
         }
     };
 }
+
+export function createNewGame(payload) {
+    return {
+        type: CREATE_NEWGAME,
+        payload: {
+            request: {
+                method: 'post',
+                data: payload,
+                header: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url: `api/games`
+            }
+        }
+    };
+}
+
+export function changeGamePlace(gameId, payload) {
+    return {
+        type: CHANGE_GAMEPLACE,
+        payload: {
+            request: {
+                method: 'put',
+                data: payload,
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url: `api/games/${gameId}/places`
+            }
+        }
+    }
+}
+

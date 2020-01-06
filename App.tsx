@@ -9,11 +9,11 @@ import axiosMiddleware from 'redux-axios-middleware';
 import reducer  from './redux/mygames/reducer';
 import Games from './Games';
 import GameDetails from './GameDetails';
-import { PlaceForm } from './PlaceForm';
-import { NewGameForm } from './NewGameForm';
+import PlaceForm from './PlaceForm';
+import NewGameForm from './NewGameForm';
 
 const client = axios.create({
-  baseURL: 'https://c86b6b22.ngrok.io',
+  baseURL: 'http://192.168.0.94:5000/',
   responseType: 'json'
 });
 

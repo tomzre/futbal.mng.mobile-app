@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { View, TextInput, Button } from "react-native";
-import { ApiConst } from "./GameService/ApiConst";
+import { connect } from 'react-redux';
+import { changeGamePlace } from "./redux/mygames/reducer";
 
-export class PlaceForm extends Component {
+class PlaceForm extends Component {
     static navigationOptions = {
         title: 'Set new place for your game',
     };
@@ -22,20 +23,13 @@ export class PlaceForm extends Component {
     }
 
     async updatePlace() {
+        const payload = {
+            street: this.state.street,
+            number: parseInt(this.state.number)
+        };
 
-        await fetch(`${ApiConst.apiUrl}api/games/${this.state.gameId}/places`, {
-            method: 'PUT',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                street: this.state.street,
-                number: this.state.number
-            }),
-        })
-        console.log(this.state.street);
-        console.log(this.state.number);
+        this.props.changeGamePlace(this.state.gameId, payload)
+
         this.props.navigation.goBack()
     }
 
@@ -66,3 +60,15 @@ export class PlaceForm extends Component {
         );
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+
+};
+}
+
+const mapDispatchToProps = {
+    changeGamePlace
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PlaceForm);
