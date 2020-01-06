@@ -15,11 +15,20 @@ export const SET_AVAILABILITY: string = 'futbal-mng/games/AVAILABILITY';
 export const SET_AVAILABILITY_SUCCESS: string = 'futbal-mng/games/AVAILABILITY_SUCCESS';
 export const SET_AVAILABILITY_FAIL: string = 'futbal-mng/games/AVAILABILITY_FAIL';
 
+export const CREATE_NEWGAME: string = 'futbal-mng/games/CREATE'
+export const CREATE_NEWGAME_SUCCESS: string = 'futbal-mng/games/CREATE_SUCCESS'
+export const CREATE_NEWGAME_FAIL: string = 'futbal-mng/games/CREATE_FAIL'
+
 const initialState = {
     games: [],
     game: {},
     setAvailability: {
         availability: null,
+        error: null,
+        loading: false
+    },
+    createNewGame: {
+        game: null,
         error: null,
         loading: false
     }
@@ -31,6 +40,8 @@ export default function reducer(state = initialState, action) {
         case GET_MYGAMES:
             return { ...state, loading: true };
         case GET_MYGAMES_SUCCESS:
+            console.log('success');
+            console.log(action.payload.data);
             return {
                 ...state,
                 loading: false,
@@ -82,6 +93,28 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 setAvailability: { availability: null, error: error, loading: false }
             };
+        case CREATE_NEWGAME:
+            return {
+                ...state,
+                createNewGame: {
+                    ...state.createNewGame,
+                    loading: true
+                }
+            };
+        case CREATE_NEWGAME_SUCCESS:
+            return {
+                ...state,
+                createNewGame: {
+                    post: action.payload,
+                    error: null,
+                    loading: false
+                }
+            };
+        case CREATE_NEWGAME_FAIL:
+            return {
+                ...state,
+                createNewGame: { game: null, error: error, loading: false }
+            };
         default:
             return state;
     }
@@ -89,11 +122,12 @@ export default function reducer(state = initialState, action) {
 
 //action creators
 export function listGames(user) {
+    console.log(user);
     return {
         type: GET_MYGAMES,
         payload: {
             request: {
-                url: `api/users/${user}/mygames`
+                url: `api/users/${user}/games`
             }
         }
     };
@@ -130,6 +164,23 @@ export function setAvailability(props, gameId, attendeeId) {
                     'Content-Type': 'application/json'
                 },
                 url: `api/games/${gameId}/attendees/${attendeeId}/available`
+            }
+        }
+    };
+}
+
+export function createNewGame(payload) {
+    return {
+        type: CREATE_NEWGAME,
+        payload: {
+            request: {
+                method: 'post',
+                data: payload,
+                header: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url: `api/games`
             }
         }
     };

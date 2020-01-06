@@ -6,8 +6,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCalendar } from "@fortawesome/free-solid-svg-icons";
 import moment from 'moment';
 import { ApiConst } from "./GameService/ApiConst";
+import { connect } from 'react-redux';
+import { createNewGame } from "./redux/mygames/reducer";
 
-export class NewGameForm extends Component
+class NewGameForm extends Component
 {
     static navigationOptions = {
         title: `Create a new game`,
@@ -32,22 +34,14 @@ export class NewGameForm extends Component
         let payload = {
             name: this.state.name,
             gameDate: this.state.gameDate,
-            ownerId: '5ebbf591-f261-4a7c-ab76-82e4d5cfebe0',
+            ownerId: '82dbe0ec-770f-4be0-ae9f-e8727f81c00d',
             address: {
                 street: this.state.streetName,
                 number: this.state.streetNumber == '' ? 0 : this.state.streetNumber
             }
         }
-        console.log(JSON.stringify(payload));
-
-        fetch(`${ApiConst.apiUrl}api/games`, {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-        });
+        
+        this.props.createNewGame(payload);
         this.props.navigation.goBack();
     }
     showDateTimePicker = () => {
@@ -145,3 +139,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#0c2461'
       },
   });
+
+
+const mapStateToProps = (state) => {
+        return {
+    
+    };
+  }
+  
+  const mapDispatchToProps = {
+    createNewGame
+  };
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(NewGameForm);
