@@ -151,7 +151,7 @@ export function receiveGame(gameId: string) {
     };
 }
 
-export function setAvailability(props, gameId, attendeeId) {
+export function setAvailability(props, gameId) {
     console.log(props);
     return {
         type: SET_AVAILABILITY,
@@ -163,7 +163,7 @@ export function setAvailability(props, gameId, attendeeId) {
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
                 },
-                url: `api/games/${gameId}/attendees/${attendeeId}/available`
+                url: `api/games/${gameId}/attendees/available`
             }
         }
     };

@@ -24,7 +24,7 @@ class AvailabilityBox extends React.Component {
             isAvailable: avail
         });
         
-        this.props.setAvailability(body, gameId, attendeeId);
+        this.props.setAvailability(body, gameId);
     }
 
     render() {
