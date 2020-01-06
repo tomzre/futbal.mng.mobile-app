@@ -29,23 +29,19 @@ class NewGameForm extends Component
         }   
     }
     createGame() {
-        let testDate = moment(this.state.gameDate).format("lll");
-        console.log(testDate);
         let payload = {
             name: this.state.name,
             gameDate: this.state.gameDate,
             ownerId: '82dbe0ec-770f-4be0-ae9f-e8727f81c00d',
-            address: {
-                street: this.state.streetName,
-                number: this.state.streetNumber == '' ? 0 : this.state.streetNumber
-            }
+            street: this.state.streetName,
+            number: this.state.streetNumber == '' ? 0 : parseInt(this.state.streetNumber)
+            
         }
         
         this.props.createNewGame(payload);
         this.props.navigation.goBack();
     }
     showDateTimePicker = () => {
-        console.log("pressed");
         this.setState({ isDateTimePickerVisible: true });
       };
      
@@ -54,7 +50,6 @@ class NewGameForm extends Component
       };
      
       handleDatePicked = date => {
-        console.log("A date has been picked: ", date);
         this.state.gameDate = date;
         this.hideDateTimePicker();
       };

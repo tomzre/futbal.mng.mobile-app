@@ -9,7 +9,7 @@ import axiosMiddleware from 'redux-axios-middleware';
 import reducer  from './redux/mygames/reducer';
 import Games from './Games';
 import GameDetails from './GameDetails';
-import { PlaceForm } from './PlaceForm';
+import PlaceForm from './PlaceForm';
 import NewGameForm from './NewGameForm';
 
 const client = axios.create({

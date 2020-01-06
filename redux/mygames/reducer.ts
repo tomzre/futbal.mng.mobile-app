@@ -15,9 +15,14 @@ export const SET_AVAILABILITY: string = 'futbal-mng/games/AVAILABILITY';
 export const SET_AVAILABILITY_SUCCESS: string = 'futbal-mng/games/AVAILABILITY_SUCCESS';
 export const SET_AVAILABILITY_FAIL: string = 'futbal-mng/games/AVAILABILITY_FAIL';
 
-export const CREATE_NEWGAME: string = 'futbal-mng/games/CREATE'
-export const CREATE_NEWGAME_SUCCESS: string = 'futbal-mng/games/CREATE_SUCCESS'
-export const CREATE_NEWGAME_FAIL: string = 'futbal-mng/games/CREATE_FAIL'
+export const CREATE_NEWGAME: string = 'futbal-mng/games/CREATE';
+export const CREATE_NEWGAME_SUCCESS: string = 'futbal-mng/games/CREATE_SUCCESS';
+export const CREATE_NEWGAME_FAIL: string = 'futbal-mng/games/CREATE_FAIL';
+
+export const CHANGE_GAMEPLACE: string = 'futbal-mng/games/PLACE';
+export const CHANGE_GAMEPLACE_SUCCESS: string = 'futbal-mng/games/PLACE_SUCCESS';
+export const CHANGE_GAMEPLACE_FAIL: string = 'futbal-mng/games/PLACE_FAIL';
+
 
 const initialState = {
     games: [],
@@ -31,6 +36,11 @@ const initialState = {
         game: null,
         error: null,
         loading: false
+    },
+    changePlace: {
+        place: null,
+        error: null,
+        loading: false
     }
 }
 
@@ -40,8 +50,6 @@ export default function reducer(state = initialState, action) {
         case GET_MYGAMES:
             return { ...state, loading: true };
         case GET_MYGAMES_SUCCESS:
-            console.log('success');
-            console.log(action.payload.data);
             return {
                 ...state,
                 loading: false,
@@ -115,6 +123,30 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 createNewGame: { game: null, error: error, loading: false }
             };
+        case CHANGE_GAMEPLACE:
+            return {
+                ...state,
+                changePlace: {
+                    ...state.changePlace,
+                    loading: true
+                }
+            };
+        case CHANGE_GAMEPLACE_SUCCESS:
+            return {
+                ...state,
+                changePlace: {
+                    post: action.payload,
+                    error: null,
+                }
+            };
+        case CHANGE_GAMEPLACE_FAIL:
+            return {
+                ...state,
+                changePlace: {
+                    put: action.payload,
+                    error: null,
+                }
+            }
         default:
             return state;
     }
@@ -122,7 +154,6 @@ export default function reducer(state = initialState, action) {
 
 //action creators
 export function listGames(user) {
-    console.log(user);
     return {
         type: GET_MYGAMES,
         payload: {
@@ -152,7 +183,6 @@ export function receiveGame(gameId: string) {
 }
 
 export function setAvailability(props, gameId) {
-    console.log(props);
     return {
         type: SET_AVAILABILITY,
         payload: {
@@ -185,3 +215,21 @@ export function createNewGame(payload) {
         }
     };
 }
+
+export function changeGamePlace(gameId, payload) {
+    return {
+        type: CHANGE_GAMEPLACE,
+        payload: {
+            request: {
+                method: 'put',
+                data: payload,
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url: `api/games/${gameId}/places`
+            }
+        }
+    }
+}
+

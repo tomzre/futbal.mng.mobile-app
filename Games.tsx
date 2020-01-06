@@ -25,7 +25,7 @@ class Games extends Component {
   }
 
   componentDidMount() {
-    this.props.listGames('8231e479-a96c-4a73-9822-83cf988f71da');
+    this.props.listGames('82dbe0ec-770f-4be0-ae9f-e8727f81c00d');
     //await this.apiCalls();
   }
 
@@ -50,7 +50,6 @@ class Games extends Component {
   }
 
   _onRefresh = () => {
-    console.log('refreshing');
     this.setState({ refreshing: true });
     this.props.listGames('82dbe0ec-770f-4be0-ae9f-e8727f81c00d')
       .then(this.setState({ refreshing: false }));
